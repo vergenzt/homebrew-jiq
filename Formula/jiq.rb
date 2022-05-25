@@ -13,6 +13,6 @@ class Jiq < Formula
   end
 
   test do
-    # todo: use pty module to run a basic test?
+    assert_match "jiq version v#{version}", shell_output("#{bin}/jiq --version")
   end
 end
