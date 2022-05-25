@@ -1,15 +1,23 @@
 class Jiq < Formula
-  desc "jid on jq - interactive JSON query tool using jq expressions"
+  desc "Jid on jq"
   homepage "https://github.com/fiatjaf/jiq"
-  url "https://github.com/fiatjaf/jiq/archive/refs/tags/0.7.1.zip"
-  sha256 "2c358cb1744c9e99e97a48c8de006ed92a641688dfb27c216f5e0e5ffc377c97"
-  license "MIT"
+  url "https://github.com/fiatjaf/jiq.git",
+      tag: "v0.7.2",
+      revision: "5dec899436617c8f30cb1526dc76108dc8486cbf"
+  head "https://github.com/fiatjaf/jiq.git", branch: "master"
 
   depends_on "go" => :build
-  depends_on "jq"
 
   def install
-    system "go", "build", *std_go_args
+    ENV["GOPATH"] = buildpath
+    ENV["GO111MODULE"] = "on"
+
+    src = buildpath/"src/github.com/fiatjaf/jiq"
+    src.install buildpath.children
+    src.cd do
+      system "go", "build", "-o", bin/"jiq", "cmd/jiq/jiq.go"
+      prefix.install_metafiles
+    end
   end
 
   test do
